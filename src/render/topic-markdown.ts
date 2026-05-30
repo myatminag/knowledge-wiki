@@ -2,6 +2,10 @@ import matter from "gray-matter";
 
 import { type Knowledge } from "@/schema/knowledge-schema";
 
+const formatObsidianDate = (date: Date) => {
+  return date.toISOString().slice(0, 10);
+};
+
 const renderList = (items: string[]) => {
   if (items.length === 0) return ["- None"];
 
@@ -43,7 +47,7 @@ export const renderTopicMarkdown = (options: {
     relativePath: string;
   }[];
 }) => {
-  const now = new Date().toISOString();
+  const now = formatObsidianDate(new Date());
 
   const body = [
     `# ${options.knowledge.title}`,

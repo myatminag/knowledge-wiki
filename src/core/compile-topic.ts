@@ -33,9 +33,18 @@ const buildPrompt = (raws: RawSource[]) => {
     .join("\n\n---\n\n");
 };
 
-export const compileTopic = async () => {
+export const compileTopic = async (options: {
+  domain?: string;
+  topic?: string;
+}) => {
   const rawDir = path.join(config.vault.path, "00-raw");
-  const raws = scanRawSources(rawDir);
+
+  const raws = scanRawSources(rawDir).filter((raw) => {
+    if (options.domain && raw.meta.domain !== options.domain) return false;
+    if (options.topic && raw.meta.topic !== options.topic) return false;
+    return true;
+  });
+
   const groups = groupByTopicDomain(raws);
 
   for (const [, group] of groups) {
@@ -89,5 +98,11 @@ export const compileTopic = async () => {
     );
 
     console.log(`Compiled: ${outputPath}`);
+
+    const compiledPaths: string[] = [];
+
+    compiledPaths.push(outputPath);
+
+    return { compiledPaths };
   }
 };

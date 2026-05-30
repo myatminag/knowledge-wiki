@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "bun test",
+    "cli": "bun run src/cli/index.ts",
     "compile": "bun run src/cli/compile.ts",
     "ask": "bun run src/cli/ask.ts",
     "seed": "bun run src/cli/seed.ts"

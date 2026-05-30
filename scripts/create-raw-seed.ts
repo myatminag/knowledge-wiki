@@ -9,6 +9,7 @@ import type { TopicClassification } from "@/core/topic-classification";
 export function createRawSeed(options: {
   question: string;
   classification: TopicClassification;
+  onExisting?: "error" | "reuse";
 }) {
   const rawDir = path.join(config.vault.path, "00-raw");
   fs.mkdirSync(rawDir, { recursive: true });
@@ -17,6 +18,14 @@ export function createRawSeed(options: {
   const filePath = path.join(rawDir, `${slug}.md`);
 
   if (fs.existsSync(filePath)) {
+    if (options.onExisting === "reuse") {
+      return {
+        path: filePath,
+        relativePath: path.relative(config.vault.path, filePath),
+        created: false,
+      };
+    }
+
     throw new Error(`Raw seed already exists: ${filePath}`);
   }
 
@@ -33,5 +42,6 @@ export function createRawSeed(options: {
   return {
     path: filePath,
     relativePath: path.relative(config.vault.path, filePath),
+    created: true,
   };
 }
